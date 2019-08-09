@@ -3,22 +3,23 @@ import React, {
     useState
 } from 'react'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import Typography from '@material-ui/core/Typography'
 
-import normalizeString from '../utils/normalize-string'
-import Platform from './platform'
-import { Typography } from '@material-ui/core'
+import Plan from './plan'
+import * as plansApi from '../apis/plans.api'
+import SelectedPlatform from './selected-platform'
 
-import * as platformsApi from '../apis/platforms.api'
-
-function Platforms() {
-    const [platforms, setPlatforms] = useState([])
+function Plans({ match, history }) {
+    
+    const [plans, setPlans] = useState([])
     const [fetching, setFetching] = useState(true)
 
     useEffect(() => {
-        const fetchPlatforms = async () => {
+        const fetchPlans = async () => {
             try {
-                const platforms = await platformsApi.get()
-                setPlatforms(platforms.map(p => ({ ...p, descricao: p.descricao })))
+                const { platformSku } = match.params
+                const plans = await plansApi.getActiveByPlatformSku(platformSku)
+                setPlans(plans)
             } catch (err) {
                 console.log(err)
             } finally {
@@ -26,8 +27,8 @@ function Platforms() {
             }
         }
 
-        fetchPlatforms()
-    }, [])
+        fetchPlans()
+    }, [match.params.platformSku])
 
     return (
         <div
@@ -43,7 +44,9 @@ function Platforms() {
                 fetching ?
                     <CircularProgress /> :
                     <>
-                        <Typography variant='h4'>Qual plataforma?</Typography>
+                        <SelectedPlatform />
+
+                        <Typography variant='h4'>Qual o plano desejado?</Typography>
                         <div
                             style={{
                                 display: 'flex',
@@ -52,7 +55,7 @@ function Platforms() {
                             }}
                         >
                         {
-                            platforms.map((platform, index) => <Platform key={index} platform={platform} />)
+                            plans.map((plan, index) => <Plan key={index} plan={plan} />)
                         }
                         </div>
                     </>
@@ -61,4 +64,4 @@ function Platforms() {
     )
 }
 
-export default Platforms
+export default Plans
