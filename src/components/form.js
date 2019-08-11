@@ -34,11 +34,13 @@ const MaskedCellPhoneInput = (props) => {
 }
 
 function Form({ match, history }) {
+    const splitedDate = new Date().toLocaleDateString().split('/')
+
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [cpf, setCpf] = useState('')
     const [cellPhone, setCellPhone] = useState('')
-    const [birthDate, setBirthDate] = useState(new Date())
+    const [birthDate, setBirthDate] = useState(`${splitedDate[2]}-${splitedDate[1]}-${splitedDate[0]}`)
     const [isEmailValid, setIsEmailValid] = useState(null)
     const [selectedPlan, setSelectedPlan] = useState(null)
     const [selectedPlatform, setSelectedPlatform] = useState(null)
