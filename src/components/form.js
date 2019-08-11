@@ -47,7 +47,7 @@ function Form({ match, history }) {
     const [selectedPlan, setSelectedPlan] = useState(null)
     const [selectedPlatform, setSelectedPlatform] = useState(null)
     const [hiring, setHiring] = useState(false)
-    const [done, setDone] = useState(true)
+    const [done, setDone] = useState(false)
 
     function validateEmail() {
         // https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
@@ -68,6 +68,10 @@ function Form({ match, history }) {
     }
 
     async function hire() {
+
+        if (!canSubmit()) {
+            return
+        }
 
         setHiring(true)
 
@@ -203,7 +207,7 @@ function Form({ match, history }) {
                             <TextField
                                 label='Data de Nascimento'
                                 value={birthDate}
-                                onChange={setBirthDate}
+                                onChange={e => setBirthDate(e.target.value)}
                                 margin='normal'
                                 fullWidth
                                 type="date"
@@ -256,7 +260,7 @@ function Form({ match, history }) {
                             backgroundColor: 'rgba(255,255,255,0.9)'
                         }}
                     >
-                        <Typography variant='h5'>Curta seu novo plano!</Typography>
+                        <Typography variant='h5'>Assinatura realizada com sucesso! 😃</Typography>
                     </div>
                 }
             </OptionsContainer>
