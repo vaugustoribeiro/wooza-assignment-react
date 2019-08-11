@@ -6,9 +6,10 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 
 import normalizeString from '../utils/normalize-string'
 import Platform from './platform'
-import { Typography } from '@material-ui/core'
 
 import * as platformsApi from '../apis/platforms.api'
+
+import OptionsContainer from './options-container'
 
 function Platforms() {
     const [platforms, setPlatforms] = useState([])
@@ -18,7 +19,7 @@ function Platforms() {
         const fetchPlatforms = async () => {
             try {
                 const platforms = await platformsApi.get()
-                setPlatforms(platforms.map(p => ({ ...p, descricao: p.descricao })))
+                setPlatforms(platforms.map(p => ({ ...p, descricao: normalizeString(p.descricao) })))
             } catch (err) {
                 console.log(err)
             } finally {
@@ -30,34 +31,18 @@ function Platforms() {
     }, [])
 
     return (
-        <div
-            style={{
-                display: 'flex',
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'column'
-            }}
-        >
+        <>
             {
                 fetching ?
                     <CircularProgress /> :
-                    <>
-                        <Typography variant='h4'>Qual plataforma?</Typography>
-                        <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                marginTop: 30
-                            }}
-                        >
+                    <OptionsContainer title='Escolha uma plataforma!'>
                         {
                             platforms.map((platform, index) => <Platform key={index} platform={platform} />)
                         }
-                        </div>
-                    </>
+                    </OptionsContainer>
             }
-        </div>
+
+        </>
     )
 }
 

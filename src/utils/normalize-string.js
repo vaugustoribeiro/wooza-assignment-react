@@ -1,5 +1,12 @@
 export default function normalizeString(string) {
-    let s = string.toLowerCase().replace('|', ' ')
-    s[0] = s[0].toUpperCase()
+
+    let ss = string.split('|')
+
+    for(let i = 1; i < ss.length; i++) {
+        ss[i] = ` ${ss[i].toLowerCase()}`
+    }
+
+    let s = ss.reduce((p, c) => p + c)
+
     return s
 }

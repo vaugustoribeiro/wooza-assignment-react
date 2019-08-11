@@ -1,7 +1,7 @@
 const uri = 'http://private-59658d-celulardireto2017.apiary-mock.com/plataformas'
 
 export const get = async () => {
-    const response = await fetch('http://private-59658d-celulardireto2017.apiary-mock.com/plataformas')
+    const response = await fetch(uri)
     const json = await response.json()
     return json.plataformas
 }

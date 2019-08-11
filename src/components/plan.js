@@ -1,32 +1,24 @@
 import React from 'react'
-import Card from '@material-ui/core/Card'
-import CardActionArea from '@material-ui/core/CardActionArea'
-import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
 import { withRouter } from 'react-router'
 
-function Plan({ plan, match, history }) {
+import OptionContainer from './option-container'
+import Price from './price'
 
-    console.log(match)
+function Plan({ plan, match, history }) {
     return (
-        <Card
-            style={{
-                margin: 10
-            }}
+        <OptionContainer
+            action={() =>
+                history.push(`/plataformas/${match.params.platformSku.toLowerCase()}/planos/${plan.sku.toLowerCase()}/solicitar`)
+            }
+            actionTitle='Contratar Agora'
         >
-            <CardActionArea
-                onClick={() => history.push(`/plataformas/${match.params.platformSku.toLowerCase()}/planos/${plan.sku.toLowerCase()}/solicitar`)}
-            >
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        R$ { plan.valor }
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        { plan.franquia }
-                    </Typography>
-                </CardContent>
-            </CardActionArea>
-        </Card>
+            <Typography variant='h6' color='primary' component='p' align='center'>
+                {plan.franquia}
+            </Typography>
+
+            <Price value={plan.valor} />
+        </OptionContainer>
     )
 }
 

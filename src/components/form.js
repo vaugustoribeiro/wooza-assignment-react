@@ -1,112 +1,204 @@
 import React, {
-    useEffect,
     useState
 } from 'react'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers'
-import { DatePicker } from '@material-ui/pickers'
-import DateFnsUtils from '@date-io/date-fns'
+import MaskedInput from 'react-text-mask'
 
-import SelectedPlatform from './selected-platform'
-import SelectedPlan from './selected-plan'
+import ChosenPlan from './chosen-plan'
+
+import OptionsContainer from './options-container'
+
+const MaskedCpfInput = props => {
+    const { inputRef, ...other } = props
+    return <MaskedInput
+        mask={[/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/]}
+        placeholderChar={'\u2000'}
+        {...other}
+        required={true}
+        ref={ref => {
+            inputRef(ref ? ref.inputElement : null);
+        }} />
+}
+
+const MaskedCellPhoneInput = (props) => {
+    const { inputRef, ...other } = props
+    return <MaskedInput
+        mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+        placeholderChar={'\u2000'}
+        {...other}
+        required={true}
+        ref={ref => {
+            inputRef(ref ? ref.inputElement : null);
+        }} />
+}
 
 function Form({ match, history }) {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [cpf, setCpf] = useState('')
-    const [telephone, setTelephone] = useState('')
+    const [cellPhone, setCellPhone] = useState('')
     const [birthDate, setBirthDate] = useState(new Date())
+    const [isEmailValid, setIsEmailValid] = useState(null)
+    const [selectedPlan, setSelectedPlan] = useState(null)
+    const [selectedPlatform, setSelectedPlatform] = useState(null)
+
+    function validateEmail() {
+        // https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+        var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+        const isEmailValid = re.test(String(email).toLowerCase())
+
+        return isEmailValid
+    }
 
     function canSubmit() {
-        return name && email && cpf && telephone && birthDate
+        return name
+            && isEmailValid
+            && cpf
+            && cpf.indexOf(' ') === -1
+            && cellPhone
+            && birthDate
+    }
+
+    function hire() {
+        console.log({
+            nome: name,
+            email: email,
+            cpf: cpf,
+            telefoneCelular: cellPhone,
+            dataDeNascimento: birthDate,
+            platforma: {
+                ...selectedPlatform,
+                plano: {
+                    ...selectedPlan
+                }
+            }
+        })
     }
 
     return (
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}
-            >
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'row'
+            }}
+        >
+            <OptionsContainer title={`Olá, precisamos de mais informações!`}>
                 <div
                     style={{
                         display: 'flex',
-                        flexDirection: 'row'
+                        flexDirection: 'row',
+                        paddingTop: 10,
+                        paddingLeft: 10,
+                        width: 500
                     }}
                 >
                     <form
                         style={{
-                            width: 300,
                             flexDirection: 'column',
-                            marginRight: 30
+                            flex: 1
                         }}
                     >
-                        <Typography variant='h4'>Quem é você?</Typography>
-
                         <TextField
-                            label="Nome"
+                            label='Nome'
                             value={name}
                             onChange={e => setName(e.target.value)}
-                            margin="normal"
+                            margin='normal'
                             fullWidth
                         />
-                        <TextField
-                            label="Email"
-                            value={email}
-                            onChange={e => setEmail(e.target.value)}
-                            margin="normal"
-                            fullWidth
-                        />
-                        <DatePicker
-                            disableFuture
-                            openTo="year"
-                            format="dd/MM/yyyy"
-                            label="Data de Nascimento"
-                            views={["year", "month", "date"]}
-                            value={birthDate}
-                            onChange={setBirthDate}
+
+                        <div
                             style={{
-                                marginTop: 16,
-                                marginBottom: 8
+                                display: 'flex',
+                                flexDirection: 'row'
                             }}
-                            fullWidth
-                        />
-                        <TextField
-                            label="Cpf"
-                            value={cpf}
-                            onChange={e => setCpf(e.target.value)}
-                            margin="normal"
-                            fullWidth
-                        />
-                        <TextField
-                            label="Telefone"
-                            value={telephone}
-                            onChange={e => setTelephone(e.target.value)}
-                            margin="normal"
-                            fullWidth
-                        />
+                        >
+                            <TextField
+                                label='Email'
+                                value={email}
+                                onChange={e => {
+                                    const email = e.target.value
+                                    setEmail(email)
+                                }}
+                                onBlur={e => {
+                                    const isEmailValid = validateEmail(email)
+                                    setIsEmailValid(isEmailValid)
+                                }}
+                                margin='normal'
+                                style={{
+                                    marginRight: 20
+                                }}
+                                type='email'
+                                fullWidth
+                                error={isEmailValid === null ? false : !isEmailValid}
+                            />
+                            <TextField
+                                label='Celular'
+                                value={cellPhone}
+                                onChange={e => setCellPhone(e.target.value)}
+                                margin='normal'
+                                fullWidth
+                                InputProps={{
+                                    inputComponent: MaskedCellPhoneInput
+                                }}
+                            />
+                        </div>
+
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'row'
+                            }}
+                        >
+                            <TextField
+                                label='CPF'
+                                value={cpf}
+                                onChange={e => setCpf(e.target.value)}
+                                margin='normal'
+                                style={{
+                                    marginRight: 20
+                                }}
+                                fullWidth
+                                InputProps={{
+                                    inputComponent: MaskedCpfInput
+                                }}
+                            />
+                            <TextField
+                                label='Data de Nascimento'
+                                value={birthDate}
+                                onChange={setBirthDate}
+                                margin='normal'
+                                fullWidth
+                                type="date"
+                            />
+                        </div>
+
 
                         <Button
                             fullWidth
                             variant='contained'
                             color='primary'
-                            disabled={!canSubmit()}>Solicitar</Button>
+                            disabled={!canSubmit()}
+                            style={{
+                                marginTop: 15
+                            }}
+                            onClick={hire}
+                        >Contratar</Button>
                     </form>
-
-                    <div>
-                        <Typography variant='h5'>Resumo da Solicitação</Typography>
-                        <SelectedPlatform />
-                        <SelectedPlan />
-                    </div>
                 </div>
+            </OptionsContainer>
+            <div
+                style={{
+                    marginLeft: 10
+                }}
+            >
+                <ChosenPlan
+                    setSelectedPlan={setSelectedPlan}
+                    setSelectedPlatform={setSelectedPlatform}
+                />
             </div>
-        </MuiPickersUtilsProvider>
+        </div>
     )
 }
 
