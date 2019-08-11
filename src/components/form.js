@@ -4,6 +4,8 @@ import React, {
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import MaskedInput from 'react-text-mask'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Typography from '@material-ui/core/Typography'
 
 import ChosenPlan from './chosen-plan'
 
@@ -44,6 +46,8 @@ function Form({ match, history }) {
     const [isEmailValid, setIsEmailValid] = useState(null)
     const [selectedPlan, setSelectedPlan] = useState(null)
     const [selectedPlatform, setSelectedPlatform] = useState(null)
+    const [hiring, setHiring] = useState(false)
+    const [done, setDone] = useState(true)
 
     function validateEmail() {
         // https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
@@ -63,7 +67,18 @@ function Form({ match, history }) {
             && birthDate
     }
 
-    function hire() {
+    async function hire() {
+
+        setHiring(true)
+
+        // simulates an api call
+        await new Promise((resolve, reject) => {
+            setTimeout(resolve, 3000)
+        })
+
+        setHiring(false)
+        setDone(true)
+
         console.log({
             nome: name,
             email: email,
@@ -79,6 +94,18 @@ function Form({ match, history }) {
         })
     }
 
+    function getTitle() {
+        let title
+        if (hiring) {
+            title = 'Contratando...'
+        } else if (done) {
+            title = `Parabéns, ${name.split(' ')[0]}!`
+        } else {
+            title = `Olá, precisamos de mais informações!`
+        }
+        return title
+    }
+
     return (
         <div
             style={{
@@ -86,7 +113,10 @@ function Form({ match, history }) {
                 flexDirection: 'row'
             }}
         >
-            <OptionsContainer title={`Olá, precisamos de mais informações!`}>
+            <OptionsContainer
+                title={getTitle()}
+                hideBackButton={done}
+            >
                 <div
                     style={{
                         display: 'flex',
@@ -108,6 +138,7 @@ function Form({ match, history }) {
                             onChange={e => setName(e.target.value)}
                             margin='normal'
                             fullWidth
+                            disabled={done}
                         />
 
                         <div
@@ -134,6 +165,7 @@ function Form({ match, history }) {
                                 type='email'
                                 fullWidth
                                 error={isEmailValid === null ? false : !isEmailValid}
+                                disabled={done}
                             />
                             <TextField
                                 label='Celular'
@@ -144,6 +176,7 @@ function Form({ match, history }) {
                                 InputProps={{
                                     inputComponent: MaskedCellPhoneInput
                                 }}
+                                disabled={done}
                             />
                         </div>
 
@@ -165,6 +198,7 @@ function Form({ match, history }) {
                                 InputProps={{
                                     inputComponent: MaskedCpfInput
                                 }}
+                                disabled={done}
                             />
                             <TextField
                                 label='Data de Nascimento'
@@ -173,22 +207,58 @@ function Form({ match, history }) {
                                 margin='normal'
                                 fullWidth
                                 type="date"
+                                disabled={done}
                             />
                         </div>
-
-
-                        <Button
-                            fullWidth
-                            variant='contained'
-                            color='primary'
-                            disabled={!canSubmit()}
-                            style={{
-                                marginTop: 15
-                            }}
-                            onClick={hire}
-                        >Contratar</Button>
+                        {
+                            !done &&
+                            <Button
+                                fullWidth
+                                variant='contained'
+                                color='primary'
+                                disabled={!canSubmit() || hiring || done}
+                                style={{
+                                    marginTop: 15
+                                }}
+                                onClick={hire}
+                            >Contratar</Button>
+                        }
                     </form>
                 </div>
+                {
+                    hiring &&
+                    <div
+                        style={{
+                            position: 'absolute',
+                            width: '100%',
+                            height: '100%',
+                            top: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: 'rgba(255,255,255,0.9)'
+                        }}
+                    >
+                        <CircularProgress />
+                    </div>
+                }
+                {
+                    done &&
+                    <div
+                        style={{
+                            position: 'absolute',
+                            width: '100%',
+                            height: '100%',
+                            top: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: 'rgba(255,255,255,0.9)'
+                        }}
+                    >
+                        <Typography variant='h5'>Curta seu novo plano!</Typography>
+                    </div>
+                }
             </OptionsContainer>
             <div
                 style={{
@@ -196,8 +266,10 @@ function Form({ match, history }) {
                 }}
             >
                 <ChosenPlan
+                    title='Plano contratado'
                     setSelectedPlan={setSelectedPlan}
                     setSelectedPlatform={setSelectedPlatform}
+                    disabled={done || hiring}
                 />
             </div>
         </div>

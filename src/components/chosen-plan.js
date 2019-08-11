@@ -13,7 +13,13 @@ import * as platformsApi from '../apis/platforms.api'
 import Price from './price'
 import OptionsContainer from './options-container'
 
-function ChosenPlan({ match, history, setSelectedPlan, setSelectedPlatform }) {
+function ChosenPlan({
+    match,
+    history,
+    setSelectedPlan,
+    setSelectedPlatform,
+    disabled
+}) {
     const [plan, setPlan] = useState(null)
     const [platform, setPlaform] = useState(null)
     const [fetching, setFetching] = useState(true)
@@ -65,20 +71,23 @@ function ChosenPlan({ match, history, setSelectedPlan, setSelectedPlatform }) {
                             <Typography variant='h6' align='center' gutterBottom>{platform.nome}</Typography>
                             <Typography variant='h5' align='center' gutterBottom color='primary'>{plan.franquia}</Typography>
                             <Price value={plan.valor} />
-                            <Button
-                                size='small'
-                                variant='outlined'
-                                fullWidth
-                                color='primary'
-                                style={{
-                                    marginTop: 8
-                                }}
-                                onClick={() => {
-                                    history.replace(`/plataformas/${platformSku}/planos`)
-                                }}
-                            >
-                                Trocar Plano
-                            </Button>
+                            {
+                                !disabled &&
+                                < Button
+                                    size='small'
+                                    variant='outlined'
+                                    fullWidth
+                                    color='primary'
+                                    style={{
+                                        marginTop: 8
+                                    }}
+                                    onClick={() => {
+                                        history.replace(`/plataformas/${platformSku}/planos`)
+                                    }}
+                                >
+                                    Trocar Plano
+                                </Button>
+                            }
                         </div>
                     </OptionsContainer>
             }

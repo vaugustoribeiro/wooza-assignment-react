@@ -68,6 +68,7 @@ function OptionsContainer({
                 </AppBar>
                 <div
                     style={{
+                        position: 'relative',
                         display: 'flex',
                         flexDirection: layout || 'row',
                         paddingRight: 10,
