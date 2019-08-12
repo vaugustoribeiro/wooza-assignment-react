@@ -2,7 +2,7 @@
 
 ### Aplicação para assinatura de planos a partir de uma plataforma.
 
-## App
+## Para executar o App
 
 ### 1) Clone este repositório
 #### `git clone https://github.com/vaugustoribeiro/wooza-assignment-react.git`
@@ -16,10 +16,10 @@
 ### 4) Execute a aplicação
 #### `npm start`
 
-## Testes
+## Para executar os testes
 
-### 1) Execute o cypress
+### 1) Execute o runner de testes
 #### `npm run test`
 
 ### 2) Escolha um teste
-#### `Plan subscription`
+#### `plan-subscription.spec.js`
