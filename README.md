@@ -1,15 +1,17 @@
-Após clonar este repositório, basta executar o comando npm install na raiz.
+# Wooza Assignment
 
-## Scripts Disponíveis
+## App
 
-No diretório do projeto, você pode rodar:
+### 1) `git clone https://github.com/vaugustoribeiro/wooza-assignment-react.git`
 
-### `npm start`
+### 2) `cd wooza-assignment-react`
 
-Executa o app em modo de desenvolvimento. <br>
+### 3) `npm install`
 
-Abra [http://localhost:3000](http://localhost:3000) para visualizar no navegador.
+### 4) `npm start`
 
-### `npm test`
+## Testes
 
-Executa o runner de testes em modo de observação interativo.
+## 1) `npm run test`
+
+## 2) Escolha o teste disponível no cypress

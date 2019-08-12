@@ -77,7 +77,7 @@ function Form({ match, history }) {
 
         // simulates an api call
         await new Promise((resolve, reject) => {
-            setTimeout(resolve, 3000)
+            setTimeout(resolve, 1500)
         })
 
         setHiring(false)
@@ -137,6 +137,7 @@ function Form({ match, history }) {
                         }}
                     >
                         <TextField
+                            name='name'
                             label='Nome'
                             value={name}
                             onChange={e => setName(e.target.value)}
@@ -152,6 +153,7 @@ function Form({ match, history }) {
                             }}
                         >
                             <TextField
+                                name='email'
                                 label='Email'
                                 value={email}
                                 onChange={e => {
@@ -172,6 +174,7 @@ function Form({ match, history }) {
                                 disabled={done}
                             />
                             <TextField
+                                name='cellPhone'
                                 label='Celular'
                                 value={cellPhone}
                                 onChange={e => setCellPhone(e.target.value)}
@@ -191,6 +194,7 @@ function Form({ match, history }) {
                             }}
                         >
                             <TextField
+                                name='cpf'
                                 label='CPF'
                                 value={cpf}
                                 onChange={e => setCpf(e.target.value)}
@@ -205,6 +209,7 @@ function Form({ match, history }) {
                                 disabled={done}
                             />
                             <TextField
+                                name='birthDate'
                                 label='Data de Nascimento'
                                 value={birthDate}
                                 onChange={e => setBirthDate(e.target.value)}

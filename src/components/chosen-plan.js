@@ -39,7 +39,6 @@ function ChosenPlan({
 
                 setPlan(plan)
                 setPlaform(platform)
-                setFetching(false)
                 setSelectedPlan(plan)
                 setSelectedPlatform(platform)
             } catch (err) {

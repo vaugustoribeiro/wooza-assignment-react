@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button'
 function Platform({ platform, history }) {
     return (
         <Card
+            className='platform'
             style={{
                 marginTop:  10,
                 marginLeft: 10
